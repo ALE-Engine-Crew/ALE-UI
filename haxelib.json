@@ -9,6 +9,6 @@
     "releasenote": "",
     "contributors": ["AlejoGDOfficial"],
     "dependencies": {
-      "flixel": ">=5.6.1 <6.0.0"
+      "flixel": "5.6.1"
     }
 }
