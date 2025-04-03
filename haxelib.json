@@ -1,5 +1,5 @@
 {
-    "name": "useless_lib",
+    "name": "ale-ui",
     "url" : "https://github.com/ALE-Engine-Crew/ALE-UI",
     "license": "MIT",
     "tags": ["flixel", "addons", "ui", "ale", "ale-engine"],
