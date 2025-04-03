@@ -1,0 +1,14 @@
+{
+    "name": "useless_lib",
+    "url" : "https://github.com/ALE-Engine-Crew/ALE-UI",
+    "license": "MIT",
+    "tags": ["flixel", "addons", "ui", "ale", "ale-engine"],
+    "description": "Addons Library for Interface Making (Designed for ALE Engine)",
+    "version": "1.0.0",
+    "classPath": "source/",
+    "releasenote": "",
+    "contributors": ["AlejoGDOfficial"],
+    "dependencies": {
+      "flixel": ">=5.6.1 <6.0.0"
+    }
+}
