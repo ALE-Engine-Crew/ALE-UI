@@ -2,7 +2,7 @@ package ale.ui;
 
 import flixel.math.FlxPoint;
 
-class ALETab extends FlxSpriteGroup
+class ALEWindow extends FlxSpriteGroup
 {
     public var outline:FlxSprite;
 
@@ -23,11 +23,11 @@ class ALETab extends FlxSpriteGroup
         var showObjects:Array<Dynamic> = [border, title, outline, minimizeButton];
 
         for (object in members)
-        {
             if (!showObjects.contains(object))
                 object.visible = !minimized;
-        }
 
+        minimizeButton.text.text = minimized ? '+' : '-';
+        
         outline.scale.y = minimized ? border.height + 2 : border.height + window.height + 4;
         outline.updateHitbox();
     }
@@ -36,11 +36,9 @@ class ALETab extends FlxSpriteGroup
     {
         super();
 
-        border = FlxGradient.createGradientFlxSprite(width - 2, 25, [color, ALEUIUtils.adjustColorBrightness(color, -25)]);
-        border.x = 1;
-        border.y = 1;
-
-        minimizeButton = new ALEButton('_', 0, 0, 25, 25, color);
+        border = ALEUIUtils.getHalfColorSprite(1, 1, width - 2, 25, color);
+        
+        minimizeButton = new ALEButton('-', 0, 0, 25, 25, color);
         minimizeButton.x = 1 + border.width - minimizeButton.width;
         minimizeButton.y = 1 + border.height / 2 - minimizeButton.height / 2;
         minimizeButton.callback = minimize;
@@ -48,9 +46,7 @@ class ALETab extends FlxSpriteGroup
         title = new FlxText(border.x + 4, 0, width - 8, string, 16);
         title.y = border.y + border.height / 2 - title.height / 2;
 
-        window = FlxGradient.createGradientFlxSprite(width - 2, height - 2, [ALEUIUtils.adjustColorBrightness(color, -50), ALEUIUtils.adjustColorBrightness(color, -75)]);
-        window.x = 1;
-        window.y = border.y + border.height + 1;
+        window = new FlxSprite(1, border.y + border.height + 1).makeGraphic(width - 2, height - 2, ALEUIUtils.adjustColorBrightness(color, -75));
 
         outline = new FlxSprite().makeGraphic(1, 1);
         outline.scale.set(width, border.height + window.height + 4);
@@ -69,6 +65,9 @@ class ALETab extends FlxSpriteGroup
     override function update(elapsed:Float)
     {
         super.update(elapsed);
+
+        if (!visible)
+            return;
 
         if (FlxG.mouse.overlaps(border) && !FlxG.mouse.overlaps(minimizeButton) && FlxG.mouse.justPressed)
         {

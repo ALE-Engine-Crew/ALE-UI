@@ -23,16 +23,15 @@ class ALEButton extends FlxSpriteGroup
         black = new FlxSprite(1, 1).makeGraphic(width - 2, height - 2, FlxColor.BLACK);
         add(black);
 
-        bg = FlxGradient.createGradientFlxSprite(width - 2, height - 2, [color, ALEUIUtils.adjustColorBrightness(color, -50)]);
-        bg.setPosition(1, 1);
+        bg = ALEUIUtils.getHalfColorSprite(1, 1, width - 2, height - 2, color);
         bg.alpha = 0.25;
         add(bg);
-
+        
         text = new FlxText(0, 0, width - 2, string, 16);
         text.alignment = CENTER;
         text.font = font;
         text.alpha = 0.75;
-        text.setPosition(bg.x + bg.width / 2 - text.width / 2, bg.y + bg.height / 2 - text.height / 2);
+        text.setPosition(outline.x + outline.width / 2 - text.width / 2, outline.y + outline.height / 2 - text.height / 2);
         add(text);
 
         this.callback = callback;
@@ -46,7 +45,10 @@ class ALEButton extends FlxSpriteGroup
     {
         super.update(elapsed);
 
-        var hovered = FlxG.mouse.overlaps(bg);
+        if (!visible)
+            return;
+
+        var hovered = FlxG.mouse.overlaps(outline);
         var justPressed = FlxG.mouse.justPressed;
         var justReleased = FlxG.mouse.justReleased;
 
@@ -67,14 +69,14 @@ class ALEButton extends FlxSpriteGroup
         }
 
         var newOutlineAlpha = hovered ? 1 : 0.6;
-        var newBgAlpha = hovered ? (pressed ? 0.75 : 0.5) : 0.3;
+        var newBGAlpha = hovered ? (pressed ? 0.75 : 0.5) : 0.3;
         var newTextAlpha = hovered ? 1 : 0.6;
 
         if (outline.alpha != newOutlineAlpha) 
             outline.alpha = newOutlineAlpha;
 
-        if (bg.alpha != newBgAlpha) 
-            bg.alpha = newBgAlpha;
+        if (bg.alpha != newBGAlpha) 
+            bg.alpha = newBGAlpha;
 
         if (text.alpha != newTextAlpha) 
             text.alpha = newTextAlpha;

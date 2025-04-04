@@ -23,4 +23,25 @@ class ALEUIUtils
     
         return FlxColor.fromRGB(r, g, b);
     }
+
+    public static function getHalfColorSprite(x:Float, y:Float, width:Float, height:Float, color:FlxColor):FlxSprite
+    {
+        var theWidth:Int = Math.floor(width);
+        var theHeight:Int = Math.floor(height);
+
+        var sprite:FlxSprite = new FlxSprite(x, y);
+        sprite.makeGraphic(theWidth, theHeight, FlxColor.TRANSPARENT);
+
+        for (y in 0...theHeight)
+        {
+            var theColor = adjustColorBrightness(color, y < theHeight / 2 ? 0 : -25);
+
+            for (x in 0...theWidth)
+                sprite.pixels.setPixel32(x, y, theColor);
+        }
+
+        sprite.dirty = true;
+
+        return sprite;
+    }
 }
