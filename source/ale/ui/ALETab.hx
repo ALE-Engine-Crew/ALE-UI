@@ -1,0 +1,104 @@
+package ale.ui;
+
+import flixel.math.FlxPoint;
+
+class ALETab extends FlxSpriteGroup
+{
+    public var outline:FlxSprite;
+
+    public var title:FlxText;
+
+    public var border:FlxSprite;
+
+    public var minimizeButton:ALEButton;
+
+    public var window:FlxSprite;
+
+    public var minimized:Bool = false;
+
+    function minimize(name:String):Void
+    {
+        minimized = !minimized;
+
+        var showObjects:Array<Dynamic> = [border, title, outline, minimizeButton];
+
+        for (object in members)
+        {
+            if (!showObjects.contains(object))
+                object.visible = !minimized;
+        }
+
+        outline.scale.y = minimized ? border.height + 2 : border.height + window.height + 4;
+        outline.updateHitbox();
+    }
+
+    override public function new(string:String, ?x:Float, ?y:Float, ?width:Int = 500, ?height:Int = 300, ?color:FlxColor = FlxColor.BLUE)
+    {
+        super();
+
+        border = FlxGradient.createGradientFlxSprite(width - 2, 25, [color, ALEUIUtils.adjustColorBrightness(color, -25)]);
+        border.x = 1;
+        border.y = 1;
+
+        minimizeButton = new ALEButton('_', 0, 0, 25, 25, color);
+        minimizeButton.x = 1 + border.width - minimizeButton.width;
+        minimizeButton.y = 1 + border.height / 2 - minimizeButton.height / 2;
+        minimizeButton.callback = minimize;
+
+        title = new FlxText(border.x + 4, 0, width - 8, string, 16);
+        title.y = border.y + border.height / 2 - title.height / 2;
+
+        window = FlxGradient.createGradientFlxSprite(width - 2, height - 2, [ALEUIUtils.adjustColorBrightness(color, -50), ALEUIUtils.adjustColorBrightness(color, -75)]);
+        window.x = 1;
+        window.y = border.y + border.height + 1;
+
+        outline = new FlxSprite().makeGraphic(1, 1);
+        outline.scale.set(width, border.height + window.height + 4);
+        outline.updateHitbox();
+
+        add(outline);
+        add(border);
+        add(title);
+        add(minimizeButton);
+        add(window);
+    }
+
+    public var dragging:Bool = false;
+    private var mouseOffset:FlxPoint = new FlxPoint();
+
+    override function update(elapsed:Float)
+    {
+        super.update(elapsed);
+
+        if (FlxG.mouse.overlaps(border) && !FlxG.mouse.overlaps(minimizeButton) && FlxG.mouse.justPressed)
+        {
+            dragging = true;
+
+            mouseOffset.x = FlxG.mouse.getWorldPosition(cameras[0]).x - x;
+            mouseOffset.y = FlxG.mouse.getWorldPosition(cameras[0]).y - y;
+        }
+
+        if (dragging && FlxG.mouse.justReleased)
+        {
+            dragging = false;
+
+            if (x > FlxG.width - 50)
+                x = FlxG.width - 50;
+            
+            if (x < -border.width + 50)
+                x = -border.width + 50;
+
+            if (y > FlxG.height - border.height)
+                y = FlxG.height - border.height;
+
+            if (y < 0)
+                y = 0;
+        }
+
+        if (dragging)
+        {
+            x = FlxG.mouse.getWorldPosition(cameras[0]).x - mouseOffset.x;
+            y = FlxG.mouse.getWorldPosition(cameras[0]).y - mouseOffset.y;
+        }
+    }
+}

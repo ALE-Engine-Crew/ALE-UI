@@ -1,13 +1,5 @@
 package ale.ui;
 
-import flixel.group.FlxSpriteGroup;
-import flixel.FlxSprite;
-import flixel.FlxG;
-import flixel.text.FlxText;
-
-import flixel.util.FlxColor;
-import flixel.util.FlxGradient;
-
 class ALEButton extends FlxSpriteGroup
 {
     public var callback:String -> Void;
@@ -15,12 +7,12 @@ class ALEButton extends FlxSpriteGroup
 
     public var pressed = false;
 
-    private final outline:FlxSprite;
-    private final black:FlxSprite;
-    private final bg:FlxSprite;
-    private final text:FlxText;
+    public var outline:FlxSprite;
+    public var black:FlxSprite;
+    public var bg:FlxSprite;
+    public var text:FlxText;
 
-    override public function new(string:String, ?x:Float = 0, ?y:Float = 0, ?width:Int = 300, ?height:Int = 100, ?callback:String -> Void, ?releaseCallback:String -> Void, ?color:FlxColor = FlxColor.BLUE, ?font:String)
+    override public function new(string:String, ?x:Float = 0, ?y:Float = 0, ?width:Int = 150, ?height:Int = 25, ?callback:String -> Void, ?releaseCallback:String -> Void, ?color:FlxColor = FlxColor.BLUE, ?font:String)
     {
         super();
 
@@ -31,12 +23,12 @@ class ALEButton extends FlxSpriteGroup
         black = new FlxSprite(1, 1).makeGraphic(width - 2, height - 2, FlxColor.BLACK);
         add(black);
 
-        bg = FlxGradient.createGradientFlxSprite(width - 2, height - 2, [color, adjustColorBrightness(color, -50)]);
+        bg = FlxGradient.createGradientFlxSprite(width - 2, height - 2, [color, ALEUIUtils.adjustColorBrightness(color, -50)]);
         bg.setPosition(1, 1);
         bg.alpha = 0.25;
         add(bg);
 
-        text = new FlxText(0, 0, width - 2, string, 32);
+        text = new FlxText(0, 0, width - 2, string, 16);
         text.alignment = CENTER;
         text.font = font;
         text.alpha = 0.75;
@@ -86,27 +78,5 @@ class ALEButton extends FlxSpriteGroup
 
         if (text.alpha != newTextAlpha) 
             text.alpha = newTextAlpha;
-    }
-
-    function adjustColorBrightness(color:FlxColor, factor:Float):FlxColor
-    {
-        factor = factor / 100;
-    
-        var r = (color >> 16) & 0xFF;
-        var g = (color >> 8) & 0xFF;
-        var b = color & 0xFF;
-    
-        if (factor > 0)
-        {
-            r += Std.int((255 - r) * factor);
-            g += Std.int((255 - g) * factor);
-            b += Std.int((255 - b) * factor);
-        } else {
-            r = Std.int(r * (1 + factor));
-            g = Std.int(g * (1 + factor));
-            b = Std.int(b * (1 + factor));
-        }
-    
-        return FlxColor.fromRGB(r, g, b);
     }
 }
