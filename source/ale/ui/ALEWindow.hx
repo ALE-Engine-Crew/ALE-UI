@@ -16,9 +16,35 @@ class ALEWindow extends FlxSpriteGroup
 
     public var minimized:Bool = false;
 
-    function minimize(name:String):Void
+    public var draggable(default, set):Bool = true;
+
+    function set_draggable(value:Bool):Bool
     {
-        minimized = !minimized;
+        draggable = value;
+
+        if (dragging && !draggable)
+            dragging = false;
+
+        return draggable;
+    }
+
+    public var minimizable(default, set):Bool = true;
+
+    function set_minimizable(value:Bool):Bool
+    {
+        minimizable = value;
+
+        minimizeButton.visible = minimizable;
+
+        return minimizable;
+    }
+
+    public function minimize(?theBool:Null<Bool> = null):Void
+    {
+        if (!minimizable)
+            return;
+
+        minimized = theBool != null ? theBool : !minimized;
 
         var showObjects:Array<Dynamic> = [border, title, outline, minimizeButton];
 
@@ -36,12 +62,18 @@ class ALEWindow extends FlxSpriteGroup
     {
         super();
 
+        this.x = x;
+        this.y = y;
+
         border = ALEUIUtils.getHalfColorSprite(1, 1, width - 2, 25, color);
         
         minimizeButton = new ALEButton('-', 0, 0, 25, 25, color);
         minimizeButton.x = 1 + border.width - minimizeButton.width;
         minimizeButton.y = 1 + border.height / 2 - minimizeButton.height / 2;
-        minimizeButton.callback = minimize;
+        minimizeButton.callback = function (_)
+        {
+            minimize();
+        };
 
         title = new FlxText(border.x + 4, 0, width - 8, string, 16);
         title.y = border.y + border.height / 2 - title.height / 2;
@@ -66,7 +98,7 @@ class ALEWindow extends FlxSpriteGroup
     {
         super.update(elapsed);
 
-        if (!visible)
+        if (!visible || !draggable)
             return;
 
         if (FlxG.mouse.overlaps(border) && !FlxG.mouse.overlaps(minimizeButton) && FlxG.mouse.justPressed)

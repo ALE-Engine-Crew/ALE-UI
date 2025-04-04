@@ -1,5 +1,11 @@
 package ale.ui;
 
+enum abstract Orientation(String)
+{
+    var UP = 'up';
+    var DOWN = 'down';
+}
+
 class ALETaskBar extends FlxSpriteGroup
 {
     public var barHeight:Int = 25;
@@ -12,7 +18,7 @@ class ALETaskBar extends FlxSpriteGroup
     public var font:String = '';
     public var barColor:FlxColor;
 
-    override public function new(?color:FlxColor = FlxColor.BLUE, ?font:String)
+    override public function new(?color:FlxColor = FlxColor.BLUE, ?font:String, ?orientation:Orientation = DOWN)
     {
         super();
 
@@ -22,16 +28,18 @@ class ALETaskBar extends FlxSpriteGroup
         outline = new FlxSprite().makeGraphic(FlxG.width, barHeight + 1);
         add(outline);
 
-        bg = new FlxSprite(0, 1).makeGraphic(FlxG.width, barHeight, ALEUIUtils.adjustColorBrightness(barColor, -75));
+        bg = new FlxSprite(0, orientation == UP ? 0 : 1).makeGraphic(FlxG.width, barHeight, ALEUIUtils.adjustColorBrightness(barColor, -75));
         add(bg);
 
-        y = FlxG.height - outline.height;
+        y = orientation == UP ? 0 : FlxG.height - outline.height;
     }
 
     public function addWindow(string:String, window:ALEWindow)
     {
-        var button:ALEButton = new ALEButton(string, buttonX, 0, 150, barHeight, null, function(_)
+        var button:ALEButton = new ALEButton(string, buttonX, 1, 150, barHeight, null, function(_)
             {
+                window.minimize(false);
+                
                 window.visible = !window.visible;
             },
         barColor, font);
