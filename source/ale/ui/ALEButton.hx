@@ -7,7 +7,6 @@ class ALEButton extends FlxSpriteGroup
 
     public var pressed = false;
 
-    public var outline:FlxSprite;
     public var black:FlxSprite;
     public var bg:FlxSprite;
     public var text:FlxText;
@@ -16,14 +15,10 @@ class ALEButton extends FlxSpriteGroup
     {
         super();
 
-        outline = new FlxSprite().makeGraphic(width, height, FlxColor.WHITE);
-        outline.alpha = 0.75;
-        add(outline);
-
-        black = new FlxSprite(1, 1).makeGraphic(width - 2, height - 2, FlxColor.BLACK);
+        black = new FlxSprite(0, 0).makeGraphic(width - 2, height - 2, FlxColor.BLACK);
         add(black);
 
-        bg = ALEUIUtils.getHalfColorSprite(1, 1, width - 2, height - 2, color);
+        bg = ALEUIUtils.getUISprite(0, 0, width - 2, height - 2, color);
         bg.alpha = 0.25;
         add(bg);
         
@@ -31,7 +26,7 @@ class ALEButton extends FlxSpriteGroup
         text.alignment = CENTER;
         text.font = font;
         text.alpha = 0.75;
-        text.setPosition(outline.x + outline.width / 2 - text.width / 2, outline.y + outline.height / 2 - text.height / 2);
+        text.setPosition(bg.x + bg.width / 2 - text.width / 2, bg.y + bg.height / 2 - text.height / 2);
         add(text);
 
         this.callback = callback;
@@ -48,7 +43,7 @@ class ALEButton extends FlxSpriteGroup
         if (!visible)
             return;
 
-        var hovered = FlxG.mouse.overlaps(outline);
+        var hovered = FlxG.mouse.overlaps(bg);
         var justPressed = FlxG.mouse.justPressed;
         var justReleased = FlxG.mouse.justReleased;
 
@@ -68,12 +63,12 @@ class ALEButton extends FlxSpriteGroup
                 releaseCallback(text.text);
         }
 
-        var newOutlineAlpha = hovered ? 1 : 0.6;
+        var newbgAlpha = hovered ? 1 : 0.6;
         var newBGAlpha = hovered ? (pressed ? 0.75 : 0.5) : 0.3;
         var newTextAlpha = hovered ? 1 : 0.6;
 
-        if (outline.alpha != newOutlineAlpha) 
-            outline.alpha = newOutlineAlpha;
+        if (bg.alpha != newbgAlpha) 
+            bg.alpha = newbgAlpha;
 
         if (bg.alpha != newBGAlpha) 
             bg.alpha = newBGAlpha;

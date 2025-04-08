@@ -45,6 +45,6 @@ class ALETaskBar extends FlxSpriteGroup
         barColor, font);
         add(button);
 
-        buttonX += button.outline.width;
+        buttonX += button.bg.width;
     }
 }
