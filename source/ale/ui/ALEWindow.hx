@@ -65,7 +65,7 @@ class ALEWindow extends FlxSpriteGroup
         this.x = x;
         this.y = y;
 
-        border = ALEUIUtils.getUISprite(1, 1, width - 2, 25, color);
+        border = ALEUIUtils.getUISprite(1, 1, width - 2, 25, color, false);
         
         minimizeButton = new ALEButton('-', 0, 0, 25, 25, color);
         minimizeButton.x = 1 + border.width - minimizeButton.width;

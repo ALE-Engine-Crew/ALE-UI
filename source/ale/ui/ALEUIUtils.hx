@@ -24,7 +24,7 @@ class ALEUIUtils
         return FlxColor.fromRGB(r, g, b);
     }
 
-    public static function getUISprite(x:Float, y:Float, width:Float, height:Float, color:FlxColor):FlxSprite
+    public static function getUISprite(x:Float, y:Float, width:Float, height:Float, color:FlxColor, ?showBorder:Bool = true):FlxSprite
     {
         var theWidth:Int = Math.floor(width);
         var theHeight:Int = Math.floor(height);
@@ -37,7 +37,7 @@ class ALEUIUtils
             var theColor = adjustColorBrightness(color, y < theHeight / 2 ? 0 : -25);
 
             for (x in 0...theWidth)
-                sprite.pixels.setPixel32(x, y, x == 0 || x == theWidth - 1 || y == 0 || y == theHeight - 1 ? FlxColor.WHITE : theColor);
+                sprite.pixels.setPixel32(x, y, (x == 0 || x == theWidth - 1 || y == 0 || y == theHeight - 1) && showBorder ? FlxColor.WHITE : theColor);
         }
 
         sprite.dirty = true;

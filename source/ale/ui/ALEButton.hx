@@ -15,11 +15,10 @@ class ALEButton extends FlxSpriteGroup
     {
         super();
 
-        black = new FlxSprite(0, 0).makeGraphic(width - 2, height - 2, FlxColor.BLACK);
+        black = new FlxSprite(0, 0).makeGraphic(width, height, FlxColor.BLACK);
         add(black);
 
-        bg = ALEUIUtils.getUISprite(0, 0, width - 2, height - 2, color);
-        bg.alpha = 0.25;
+        bg = ALEUIUtils.getUISprite(0, 0, width, height, color);
         add(bg);
         
         text = new FlxText(0, 0, width - 2, string, 16);
@@ -64,7 +63,7 @@ class ALEButton extends FlxSpriteGroup
         }
 
         var newbgAlpha = hovered ? 1 : 0.6;
-        var newBGAlpha = hovered ? (pressed ? 0.75 : 0.5) : 0.3;
+        var newBGAlpha = hovered ? (pressed ? 1 : 0.75) : 0.5;
         var newTextAlpha = hovered ? 1 : 0.6;
 
         if (bg.alpha != newbgAlpha) 
