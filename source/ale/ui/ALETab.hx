@@ -18,7 +18,7 @@ class ALETab extends ALEUISpriteGroup
 
     var minButton:ALEButton;
 
-    public var staticObjects:Array<ALEUIObject> = [];
+    public var staticObjects:Array<FlxSprite> = [];
 
     public var minimized(default, set):Bool;
     function set_minimized(value:Bool):Bool
@@ -26,12 +26,13 @@ class ALETab extends ALEUISpriteGroup
         minimized = value;
 
         for (obj in members)
-            if (obj is ALEUIObject)
-            {
-                var obj:ALEUIObject = cast obj;
+            if (!staticObjects.contains(obj))
+                if (obj is ALEUIObject)
+                {
+                    var obj:ALEUIObject = cast obj;
 
-                obj.allowDraw = obj.allowUpdate = !minimized;
-            }
+                    obj.allowDraw = obj.allowUpdate = !minimized;
+                }
         
         return minimized;
     }

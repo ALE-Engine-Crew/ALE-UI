@@ -25,7 +25,7 @@ class ALEMultiTab extends ALEUISpriteGroup
 
     public var groups:StringMap<ALEUISpriteGroup>;
 
-    public var staticObjects:Array<ALEUIObject> = [];
+    public var staticObjects:Array<FlxSprite> = [];
 
     public var minimized(default, set):Bool;
     function set_minimized(value:Bool):Bool
@@ -33,12 +33,13 @@ class ALEMultiTab extends ALEUISpriteGroup
         minimized = value;
 
         for (obj in members)
-            if (obj is ALEUISprite)
-            {
-                var obj:ALEUISprite = cast obj;
+            if (!staticObjects.contains(obj))
+                if (obj is ALEUISprite)
+                {
+                    var obj:ALEUISprite = cast obj;
 
-                obj.allowDraw = obj.allowUpdate = !minimized;
-            }
+                    obj.allowDraw = obj.allowUpdate = !minimized;
+                }
         
         return minimized;
     }
