@@ -15,12 +15,43 @@ class ALEDropDown extends ALEUISpriteGroup
     public var button:ALEButton;
 
     public var buttons:ALEUISpriteGroup;
-    public var options:Array<String> = [];
+    public var options(default, set):Array<String> = [];
+    function set_options(val:Array<String>):Array<String>
+    {
+        options = [];
+
+        for (obj in buttons)
+            buttons.remove(obj, true);
+
+        for (option in val)
+            addOption(option);
+
+        selected = options[0];
+
+        selectedIndex = 0;
+
+        return options;
+    }
 
     var shouldOpen:Bool = false;
     public var isOpen:Bool = false;
 
-    public var selectedIndex:Int = 0;
+    public var selectCallback:Void -> Void;
+    public var openCallback:Void -> Void;
+    public var closeCallback:Void -> Void;
+
+    public var selectedIndex(default, set):Int = 0;
+    function set_selectedIndex(val:Int):Int
+    {
+        selectedIndex = val;
+
+        if (!isOpen)
+            for (index => butt in buttons.members)
+                butt.y = bg.y + intH * (index - selectedIndex);
+
+        return selectedIndex;
+    }
+
     public var selected(default, set):String;
     function set_selected(value:String):String
     {
@@ -31,12 +62,6 @@ class ALEDropDown extends ALEUISpriteGroup
             selected = value;
 
         bg.text.text = selected;
-
-        selectedIndex = options.indexOf(selected);
-
-        if (!isOpen)
-            for (index => butt in buttons.members)
-                butt.y = bg.y + intH * (index - selectedIndex);
         
         return selected;
     }
@@ -51,7 +76,7 @@ class ALEDropDown extends ALEUISpriteGroup
         intW = Math.floor(w ?? 125);
         intH = Math.floor(h ?? 25);
 
-        bg = new ALEButton(intH, 0, intW - intH, intH, false, options[0], -50);
+        bg = new ALEButton(intH, 0, intW - intH, intH, false, '', -50);
         bg.text.x = intH + 5;
         bg.animated = false;
         add(bg);
@@ -67,10 +92,7 @@ class ALEDropDown extends ALEUISpriteGroup
         bg.releaseCallback = () -> { alternateOpen(); };
         button.releaseCallback = () -> { alternateOpen(); };
 
-        for (option in options)
-            addOption(option);
-
-        selected = options[0];
+        this.options = options;
     }
 
     public function alternateOpen(?force:Bool)
@@ -90,6 +112,12 @@ class ALEDropDown extends ALEUISpriteGroup
         FlxTween.cancelTweensOf(buttons);
 
         FlxTween.tween(buttons, {x: this.x - (shouldOpen ? intW : intW * 0.75), alpha: shouldOpen ? 1 : 0}, 0.25, {ease: FlxEase.cubeOut, onComplete: (_) -> { isOpen = shouldOpen; }});
+
+        if (shouldOpen && openCallback != null)
+            openCallback();
+
+        if (!shouldOpen && closeCallback != null)
+            closeCallback();
     }
 
     var scrollAllowed:Bool = false;
@@ -142,9 +170,14 @@ class ALEDropDown extends ALEUISpriteGroup
             selectedIndex = index;
 
             change();
+
+            alternateOpen(false);
+
+            if (selectCallback != null)
+                selectCallback();
         };
 
-        options.push(id);
+        options.insert(index, id);
     }
 
     public function change()

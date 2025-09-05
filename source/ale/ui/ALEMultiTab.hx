@@ -78,7 +78,6 @@ class ALEMultiTab extends ALEUISpriteGroup
         staticObjects = [minButton];
 
         __groups = new ALEUISpriteGroup();
-        add(__groups);
 
         groups = new StringMap<ALEUISpriteGroup>();
 
@@ -106,6 +105,8 @@ class ALEMultiTab extends ALEUISpriteGroup
             groups.set(title, group);
         }
 
+        add(__groups);
+        
         selectGroup(titles[0]);
 
         this.x = x;
