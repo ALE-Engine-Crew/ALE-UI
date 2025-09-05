@@ -34,9 +34,9 @@ class ALEMultiTab extends ALEUISpriteGroup
 
         for (obj in members)
             if (!staticObjects.contains(obj))
-                if (obj is ALEUISprite)
+                if (obj is ALEUIObject)
                 {
-                    var obj:ALEUISprite = cast obj;
+                    var obj:ALEUIObject = cast obj;
 
                     obj.allowDraw = obj.allowUpdate = !minimized;
                 }
