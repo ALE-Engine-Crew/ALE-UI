@@ -65,6 +65,8 @@ class ALEColorPicker extends ALEUISpriteGroup
         }
     ';
 
+    public var callback:Void -> Void;
+
     public var spriteHSB:FlxSprite;
     public var selHSB:FlxSprite;
 
@@ -215,6 +217,9 @@ class ALEColorPicker extends ALEUISpriteGroup
             rStepper.value = curColor >> 16 & 0xFF;
             gStepper.value = curColor >> 8 & 0xFF;
             bStepper.value = curColor & 0xFF;
+
+            if (callback != null)
+                callback();
         }
     }
 
