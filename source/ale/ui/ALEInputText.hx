@@ -44,6 +44,9 @@ class ALEInputText extends ALEUISpriteGroup
     public var intW:Int = 0;
     public var intH:Int = 0;
 
+    public var openCallback:Void -> Void;
+    public var closeCallback:Void -> Void;
+
     public var canWrite(default, set):Bool = false;
     function set_canWrite(val:Bool):Bool
     {
@@ -88,7 +91,7 @@ class ALEInputText extends ALEUISpriteGroup
         intH = Math.floor(h ?? 25);
 
         bg = new ALEUISprite();
-        bg.makeGraphic(intW, intH, ALEUIUtils.color);
+        bg.makeGraphic(intW, intH, ALEUIUtils.adjustColorBrightness(ALEUIUtils.color, -50));
         ALEUIUtils.outlineBitmap(bg.pixels);
         add(bg);
 
@@ -127,10 +130,18 @@ class ALEInputText extends ALEUISpriteGroup
     override function updateUI(elapsed:Float)
     {
         if (FlxG.mouse.justPressed)
-            if (FlxG.mouse.overlaps(bg) && !canWrite)
+            if (mouseOverlaps(bg) && !canWrite)
+            {
                 canWrite = true;
-            else if (!FlxG.mouse.overlaps(bg) && canWrite)
+
+                if (openCallback != null)
+                    openCallback();
+            } else if (!mouseOverlaps(bg) && canWrite) {
                 canWrite = false;
+
+                if (closeCallback != null)
+                    closeCallback();
+            }
 
         if (canWrite)
         {
@@ -169,6 +180,9 @@ class ALEInputText extends ALEUISpriteGroup
             
             case FlxKey.ENTER, FlxKey.ESCAPE:
                 canWrite = false;
+
+                if (closeCallback != null)
+                    closeCallback();
 
                 return;
 
@@ -360,7 +374,8 @@ class ALEInputText extends ALEUISpriteGroup
         if (change != null)
             curIndex += change;
 
-        line.visible = true;
+        if (canWrite)
+            line.visible = true;
 
         var bounds = text.textField.getCharBoundaries(curIndex - 1);
 

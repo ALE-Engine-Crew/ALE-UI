@@ -1,11 +1,18 @@
 package ale.ui;
 
+import flixel.FlxBasic;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxPoint;
 
 class ALEUISpriteGroup extends FlxSpriteGroup implements ALEUIObject
 {
     public var allowUpdate:Bool = true;
     public var allowDraw:Bool = true;
+
+    public var mousePosition:FlxPoint = FlxPoint.get();
+
+    public function mouseOverlaps(obj:FlxBasic):Bool
+        return FlxG.mouse.overlaps(obj, cameras[0]);
 
     override function update(elapsed:Float)
     {
@@ -15,6 +22,8 @@ class ALEUISpriteGroup extends FlxSpriteGroup implements ALEUIObject
         super.update(elapsed);
 
         updateUI(elapsed);
+        
+        mousePosition = FlxG.mouse.getScreenPosition(cameras[0]);
     }
 
     public function updateUI(elapsed:Float) {}

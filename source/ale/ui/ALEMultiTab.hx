@@ -141,8 +141,8 @@ class ALEMultiTab extends ALEUISpriteGroup
 
         canMove = true;
 
-        mouseOffset.x = FlxG.mouse.x - this.x;
-        mouseOffset.y = FlxG.mouse.y - this.y;
+        mouseOffset.x = mousePosition.x - this.x;
+        mouseOffset.y = mousePosition.y - this.y;
     }
 
     function releaseFunc()
@@ -168,8 +168,8 @@ class ALEMultiTab extends ALEUISpriteGroup
     {
         if (canMove)
         {
-            x = FlxG.mouse.x - mouseOffset.x;
-            y = FlxG.mouse.y - mouseOffset.y;
+            x = mousePosition.x - mouseOffset.x;
+            y = mousePosition.y - mouseOffset.y;
         }
         
         super.updateUI(elapsed);

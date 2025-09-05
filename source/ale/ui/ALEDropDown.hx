@@ -126,7 +126,7 @@ class ALEDropDown extends ALEUISpriteGroup
     {
         super.updateUI(elapsed);
 
-        var overlaped:Bool = FlxG.mouse.overlaps(this);
+        var overlaped:Bool = mouseOverlaps(this);
 
         if (isOpen)
         {

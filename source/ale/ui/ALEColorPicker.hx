@@ -183,9 +183,9 @@ class ALEColorPicker extends ALEUISpriteGroup
 
         if (FlxG.mouse.justPressed)
         {
-            if (FlxG.mouse.overlaps(spriteHUE))
+            if (mouseOverlaps(spriteHUE))
                 changingHUE = true;
-            else if (FlxG.mouse.overlaps(spriteHSB))
+            else if (mouseOverlaps(spriteHSB))
                 changingHSB = true;
         }
 
@@ -200,13 +200,13 @@ class ALEColorPicker extends ALEUISpriteGroup
 
         if (changingHSB)
         {
-            saturation = FlxMath.bound((FlxG.mouse.x - spriteHSB.x) / intW, 0, 1);
+            saturation = FlxMath.bound((mousePosition.x - spriteHSB.x) / intW, 0, 1);
 
-            brigthness = FlxMath.bound(1 - (FlxG.mouse.y - spriteHSB.y) / intH, 0, 1);
+            brigthness = FlxMath.bound(1 - (mousePosition.y - spriteHSB.y) / intH, 0, 1);
         }
 
         if (changingHUE)
-            hue = FlxMath.bound((FlxG.mouse.x - spriteHUE.x) / intW * 360, 0, 360);
+            hue = FlxMath.bound((mousePosition.x - spriteHUE.x) / intW * 360, 0, 360);
 
         if (changingHSB || changingHUE)
         {
@@ -261,7 +261,7 @@ class ALEColorPicker extends ALEUISpriteGroup
         };
     }
 
-    inline function rgbColor()
+    public function rgbColor()
     {
         var data:Dynamic = {
             r: rStepper.value,

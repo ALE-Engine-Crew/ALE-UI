@@ -64,7 +64,7 @@ class ALEButton extends ALEUISpriteGroup
     {
         super.updateUI(elapsed);
 
-        if (FlxG.mouse.overlaps(this))
+        if (mouseOverlaps(this))
         {
             if (FlxG.mouse.justPressed)
             {
@@ -95,7 +95,7 @@ class ALEButton extends ALEUISpriteGroup
         if (!animated)
             return;
 
-        var maskAlpha:Float = canPress ? (alpha * (pressed ? 0.25 : FlxG.mouse.overlaps(this) ? 0.1 : 0)) : 0.25;
+        var maskAlpha:Float = canPress ? (alpha * (pressed ? 0.25 : mouseOverlaps(this) ? 0.1 : 0)) : 0.25;
 
         if (mask.alpha != maskAlpha)
             mask.alpha = maskAlpha;

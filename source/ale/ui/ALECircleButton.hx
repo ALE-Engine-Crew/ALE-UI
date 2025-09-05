@@ -63,7 +63,7 @@ class ALECircleButton extends ALEUISpriteGroup
         circle = new FlxShapeCircle(0, 0, size / 2, {thickness: 0, color: ALEUIUtils.outlineColor}, ALEUIUtils.outlineColor);
         add(circle);
         circle.x = bg.x + bg.width / 2 - circle.width / 2;
-        circle.y = bg.y + bg.height / 2 - circle .height / 2;
+        circle.y = bg.y + bg.height / 2 - circle.height / 2;
 
         mask = new FlxShapeCircle(0, 0, size, {thickness: size / 10, color: FlxColor.WHITE}, FlxColor.WHITE);
         add(mask);
@@ -88,7 +88,7 @@ class ALECircleButton extends ALEUISpriteGroup
     {
         super.updateUI(elapsed);
 
-        if (FlxG.mouse.overlaps(bg))
+        if (mouseOverlaps(bg))
         {
             if (FlxG.mouse.justPressed)
             {
@@ -121,7 +121,7 @@ class ALECircleButton extends ALEUISpriteGroup
         if (!animated)
             return;
 
-        var maskAlpha:Float = canPress ? (alpha * (pressed ? 0.25 : FlxG.mouse.overlaps(bg) ? 0.1 : 0)) : 0.25;
+        var maskAlpha:Float = canPress ? (alpha * (pressed ? 0.25 : mouseOverlaps(bg) ? 0.1 : 0)) : 0.25;
 
         if (mask.alpha != maskAlpha)
             mask.alpha = maskAlpha;

@@ -69,25 +69,14 @@ class ALETab extends ALEUISpriteGroup
 
             canMove = true;
 
-            mouseOffset.x = FlxG.mouse.x - this.x;
-            mouseOffset.y = FlxG.mouse.y - this.y;
+            mouseOffset.x = mousePosition.x - this.x;
+            mouseOffset.y = mousePosition.y - this.y;
         };
         border.releaseCallback = () -> {
             if (!movable)
                 return;
             
             canMove = false;
-
-            if (this.x > FlxG.width || this.y > FlxG.height)
-            {
-                FlxTween.cancelTweensOf(this);
-
-                if (this.x > FlxG.width)
-                    FlxTween.tween(this, {x: FlxG.width - 40}, 0.5, {ease: FlxEase.cubeOut});
-
-                if (this.y - 40 > FlxG.height)
-                    FlxTween.tween(this, {y: FlxG.height}, 0.5, {ease: FlxEase.cubeOut});
-            }
         };
 
         minButton = new ALEButton(0, border.y, border.height, border.height, false, '-');
@@ -109,8 +98,8 @@ class ALETab extends ALEUISpriteGroup
     {
         if (canMove)
         {
-            x = FlxG.mouse.x - mouseOffset.x;
-            y = FlxG.mouse.y - mouseOffset.y;
+            x = mousePosition.x - mouseOffset.x;
+            y = mousePosition.y - mouseOffset.y;
         }
         
         super.updateUI(elapsed);
