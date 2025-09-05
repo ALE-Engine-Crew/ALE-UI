@@ -1,78 +1,103 @@
 package ale.ui;
 
-class ALEButton extends FlxSpriteGroup
+import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.text.FlxText.FlxTextAlign;
+
+import ale.ui.ALEUISpriteGroup;
+import ale.ui.ALEUIUtils;
+
+class ALEButton extends ALEUISpriteGroup
 {
-    public var callback:String -> Void;
-    public var releaseCallback:String -> Void;
-
-    public var pressed = false;
-
-    public var black:FlxSprite;
     public var bg:FlxSprite;
     public var text:FlxText;
+    public var mask:FlxSprite;
 
-    override public function new(string:String, ?x:Float = 0, ?y:Float = 0, ?width:Int = 150, ?height:Int = 25, ?callback:String -> Void, ?releaseCallback:String -> Void, ?color:FlxColor = FlxColor.BLUE, ?font:String)
+    public var animated:Bool = true;
+
+    public var canPress(default, set):Bool = true;
+    function set_canPress(value:Bool):Bool
     {
-        super();
+        canPress = value;
 
-        black = new FlxSprite(0, 0).makeGraphic(width, height, FlxColor.BLACK);
-        add(black);
+        if (pressed)
+        {
+            if (animated)
+                scale.x = scale.y = 1;
 
-        bg = ALEUIUtils.getUISprite(0, 0, width, height, color);
-        add(bg);
-        
-        text = new FlxText(0, 0, width - 2, string, 16);
-        text.alignment = CENTER;
-        text.font = font;
-        text.alpha = 0.75;
-        text.setPosition(bg.x + bg.width / 2 - text.width / 2, bg.y + bg.height / 2 - text.height / 2);
-        add(text);
+            pressed = false;
+        }
 
-        this.callback = callback;
-        this.releaseCallback = releaseCallback;
+        mask.color = canPress ? FlxColor.WHITE : FlxColor.BLACK;
 
-        this.x = x;
-        this.y = y;
+        return canPress;
     }
 
-    override function update(elapsed:Float)
+    public function new(?x:Float, ?y:Float, ?w:Float, ?h:Float, ?shadowed:Bool, ?string:String, ?brightness:Float)
     {
-        super.update(elapsed);
+        super(x, y);
 
-        if (!visible)
+        var intW:Int = Math.floor(w ?? 125);
+        var intH:Int = Math.floor(h ?? 25);
+
+        bg = new FlxSprite().makeGraphic(intW, intH, FlxColor.TRANSPARENT);
+        bg.pixels = ALEUIUtils.uiBitmap(intW, intH, shadowed, brightness);
+        add(bg);
+
+        text = new FlxText(0, 0, 0, string ?? 'Button', Math.floor(Math.min(intW, intH) / 1.5));
+        text.font = ALEUIUtils.font;
+        text.x = bg.width / 2 - text.width / 2;
+        text.y = bg.height / 2 - text.height / 2;
+        add(text);
+
+        mask = new FlxSprite().makeGraphic(intW, intH);
+        add(mask);
+        mask.alpha = 0;
+    }
+
+    public var pressed:Bool = false;
+
+    public var callback:Void -> Void;
+    public var releaseCallback:Void -> Void;
+
+    override function updateUI(elapsed:Float)
+    {
+        super.updateUI(elapsed);
+
+        if (FlxG.mouse.overlaps(this))
+        {
+            if (FlxG.mouse.justPressed)
+            {
+                if (canPress)
+                {
+                    if (callback != null)
+                        callback();
+
+                    if (animated)
+                        scale.x = scale.y = 0.975;
+
+                    pressed = true;
+                }
+            }
+        }
+
+        if (FlxG.mouse.justReleased && pressed)
+        {
+            if (releaseCallback != null)
+                releaseCallback();
+
+            if (animated)
+                scale.x = scale.y = 1;
+
+            pressed = false;
+        }
+
+        if (!animated)
             return;
 
-        var hovered = FlxG.mouse.overlaps(bg);
-        var justPressed = FlxG.mouse.justPressed;
-        var justReleased = FlxG.mouse.justReleased;
+        var maskAlpha:Float = canPress ? (alpha * (pressed ? 0.25 : FlxG.mouse.overlaps(this) ? 0.1 : 0)) : 0.25;
 
-        if (hovered && justPressed)
-        {
-            pressed = true;
-
-            if (callback != null) 
-                callback(text.text);
-        }
-
-        if (pressed && justReleased)
-        {
-            pressed = false;
-
-            if (releaseCallback != null) 
-                releaseCallback(text.text);
-        }
-
-        var newbgAlpha = hovered ? 1 : 0.6;
-        var newBGAlpha = hovered ? (pressed ? 1 : 0.75) : 0.5;
-        var newTextAlpha = hovered ? 1 : 0.6;
-
-        if (bg.alpha != newbgAlpha) 
-            bg.alpha = newbgAlpha;
-
-        if (bg.alpha != newBGAlpha) 
-            bg.alpha = newBGAlpha;
-
-        if (text.alpha != newTextAlpha) 
-            text.alpha = newTextAlpha;
+        if (mask.alpha != maskAlpha)
+            mask.alpha = maskAlpha;
     }
 }
