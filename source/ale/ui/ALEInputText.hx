@@ -53,8 +53,6 @@ class ALEInputText extends ALEUISpriteGroup
         if (canWrite != val)
             ALEUIUtils.usedInputs = ALEUIUtils.usedInputs + (val ? 1 : -1);
 
-        trace(ALEUIUtils.usingInputs + ' | ' + ALEUIUtils.usedInputs);
-
         canWrite = val;
 
         if (line != null)
@@ -166,6 +164,8 @@ class ALEInputText extends ALEUISpriteGroup
     override function destroy()
     {
         FlxG.stage.removeEventListener('keyDown', onKeyDown, false);
+
+        canWrite = false;
 
         super.destroy();
     }
