@@ -37,6 +37,19 @@ enum abstract PrintType(String)
 
 class ALEUIUtils
 {
+    @:allow(ale.ui.ALEInputText)
+    @:unreflective private static var usedInputs(default, set):Int = 0;
+    static function set_usedInputs(val:Int):Int
+    {
+        usedInputs = Math.floor(Math.max(0, val));
+
+        return usedInputs;
+    }
+
+    public static var usingInputs(get, never):Bool;
+    static function get_usingInputs():Bool
+        return usedInputs > 0;
+
     public static var color:FlxColor = FlxColor.fromRGB(50, 70, 100);
     public static var outlineColor:FlxColor = FlxColor.WHITE;
     public static var font:String = null;

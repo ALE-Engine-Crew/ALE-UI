@@ -50,6 +50,11 @@ class ALEInputText extends ALEUISpriteGroup
     public var canWrite(default, set):Bool = false;
     function set_canWrite(val:Bool):Bool
     {
+        if (canWrite != val)
+            ALEUIUtils.usedInputs = ALEUIUtils.usedInputs + (val ? 1 : -1);
+
+        trace(ALEUIUtils.usingInputs + ' | ' + ALEUIUtils.usedInputs);
+
         canWrite = val;
 
         if (line != null)
