@@ -38,7 +38,7 @@ enum abstract PrintType(String)
 class ALEUIUtils
 {
     @:allow(ale.ui.ALEInputText)
-    @:unreflective private static var usedInputs(default, set):Int = 0;
+    private static var usedInputs(default, set):Int = 0;
     static function set_usedInputs(val:Int):Int
     {
         usedInputs = Math.floor(Math.max(0, val));
