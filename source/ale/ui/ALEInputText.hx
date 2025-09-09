@@ -294,7 +294,7 @@ class ALEInputText extends ALEUISpriteGroup
 
         var start = curIndex;
         
-        var skipChars:Bool = value.charAt(start - 1) == ' ' && value.charAt(start - 2) != ' ';
+        var skipChars:Bool = value.charAt(start - 1) == ' ' && value.charAt(start - 2) == ' ';
 
         while (start > 0 && value.charAt(start - 1) == ' ')
             start--;
